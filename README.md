@@ -38,7 +38,7 @@ jobs:
 
 ## Setup
 
-1. Sign up at [tryflare.ai](https://www.tryflare.ai/sign-up)
+1. Sign up at [tryflare.ai](https://tryflare.ai/sign-up)
 2. Connect your GCP project (OAuth, 60 seconds)
 3. Go to **Connectors**, click **Generate webhook token** in the Deploy webhook section
 4. Add the token as a repository secret: **Settings > Secrets > Actions > New repository secret** named `FLARE_WEBHOOK_TOKEN`
@@ -108,11 +108,12 @@ The post-deploy comparison focuses on what *changed* between the two windows:
 
 ## Requirements
 
-- A Flare account with a connected GCP connector ([sign up](https://www.tryflare.ai/sign-up))
+- A Flare account with a connected GCP connector ([sign up](https://tryflare.ai/sign-up))
 - `jq` and `curl` available in the runner (included in all GitHub-hosted runners)
 
 ## Documentation
 
+- [GCP Audit Log anomaly detection](https://tryflare.ai/gcp-audit-log-anomaly-detection)
 - [Deploy Webhooks docs](https://docs.tryflare.ai/deploy-webhooks)
 - [Flare documentation](https://docs.tryflare.ai)
 
