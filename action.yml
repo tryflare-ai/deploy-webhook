@@ -13,7 +13,7 @@ inputs:
   api-url:
     description: 'Flare webhook endpoint URL. Override only for self-hosted or staging.'
     required: false
-    default: 'https://www.tryflare.ai/api/webhooks/deploy'
+    default: 'https://tryflare.ai/api/webhooks/deploy'
   commit-sha:
     description: 'Git commit SHA of the deployment. Defaults to the current commit.'
     required: false
