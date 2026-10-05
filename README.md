@@ -1,8 +1,10 @@
 # Flare Deploy Webhook
 
-**Get an automatic security review after every deployment.**
+Queue a cloud security review after deployment. This Action sends deployment metadata to Flare, which compares audit activity before and after the release and reports results in your Flare dashboard.
 
-Flare compares your cloud audit logs from *before* and *after* each deploy to catch IAM changes, new service accounts, permission escalations, and access pattern shifts. This GitHub Action triggers that comparison with a single step in your workflow.
+**Start here:** [Setup and all four Actions](https://tryflare.ai/github-actions) · [PR review demo](https://github.com/tryflare-ai/actions-demo)
+
+Requires a supported cloud connector and its webhook token. Analysis is asynchronous; a successful webhook means the review was queued, not that the deployment passed a security assessment.
 
 ## How it works
 
@@ -34,12 +36,13 @@ jobs:
         uses: tryflare-ai/deploy-webhook@v1
         with:
           token: ${{ secrets.FLARE_WEBHOOK_TOKEN }}
+          api-url: https://tryflare.ai/api/webhooks/deploy
 ```
 
 ## Setup
 
 1. Sign up at [tryflare.ai](https://tryflare.ai/sign-up)
-2. Connect your GCP project (OAuth, 60 seconds)
+2. Connect your GCP project using OAuth
 3. Go to **Connectors**, click **Generate webhook token** in the Deploy webhook section
 4. Add the token as a repository secret: **Settings > Secrets > Actions > New repository secret** named `FLARE_WEBHOOK_TOKEN`
 5. Add the step to your deploy workflow
@@ -52,7 +55,7 @@ jobs:
 | `commit-sha` | No | `${{ github.sha }}` | Git commit SHA of the deployment. |
 | `branch` | No | `${{ github.ref_name }}` | Branch that was deployed. |
 | `environment` | No | -- | Deployment environment (e.g., `production`, `staging`). |
-| `api-url` | No | `https://www.tryflare.ai/api/webhooks/deploy` | Webhook endpoint. Override for self-hosted or staging. |
+| `api-url` | No | `https://tryflare.ai/api/webhooks/deploy` | Webhook endpoint. Override for self-hosted or staging. |
 
 ## Outputs
 
@@ -68,6 +71,7 @@ jobs:
   uses: tryflare-ai/deploy-webhook@v1
   with:
     token: ${{ secrets.FLARE_WEBHOOK_TOKEN }}
+    api-url: https://tryflare.ai/api/webhooks/deploy
     environment: production
 ```
 
@@ -79,6 +83,7 @@ jobs:
   uses: tryflare-ai/deploy-webhook@v1
   with:
     token: ${{ secrets.FLARE_WEBHOOK_TOKEN }}
+    api-url: https://tryflare.ai/api/webhooks/deploy
     environment: production
 ```
 
@@ -90,6 +95,7 @@ jobs:
   uses: tryflare-ai/deploy-webhook@v1
   with:
     token: ${{ secrets.FLARE_WEBHOOK_TOKEN }}
+    api-url: https://tryflare.ai/api/webhooks/deploy
 
 - name: Print analysis time
   run: echo "Security review scheduled for ${{ steps.flare.outputs.analysis-at }}"
@@ -120,3 +126,15 @@ The post-deploy comparison focuses on what *changed* between the two windows:
 ## License
 
 MIT
+
+## Data handling and limits
+
+The Action sends deployment metadata to Flare. Flare uses your connector to read cloud audit logs and sends selected audit information to its AI provider. Findings and supporting evidence are available in Flare; this Action does not post the audit analysis into GitHub.
+
+Up to 24 new deploy jobs per day per connector. Duplicate requests are handled separately. Rate limits and temporary service failures produce a warning and queued=false; downstream steps must inspect that output.
+
+The Action code is MIT-licensed; hosted analysis requires a Flare account and is subject to [current service terms](https://tryflare.ai/#pricing). AI findings are review assistance, not proof of compromise or a guarantee that an environment is secure. [Privacy policy](https://tryflare.ai/privacy).
+
+## More Flare Actions
+
+[PR security check](https://github.com/tryflare-ai/pr-security-check) · [Deploy review](https://github.com/tryflare-ai/deploy-webhook) · [Incident scope](https://github.com/tryflare-ai/incident-scope) · [Security changelog](https://github.com/tryflare-ai/security-changelog)
