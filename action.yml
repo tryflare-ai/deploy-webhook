@@ -98,6 +98,10 @@ runs:
           echo "::warning::Flare: daily post-deploy analysis limit reached for this connector. This deploy was not queued."
           echo "queued=false" >> "$GITHUB_OUTPUT"
           exit 0
+        elif [ "$HTTP_CODE" = "502" ] || [ "$HTTP_CODE" = "503" ]; then
+          echo "::warning::Flare: service temporarily unavailable (HTTP $HTTP_CODE). This deploy was not queued; your deploy is unaffected."
+          echo "queued=false" >> "$GITHUB_OUTPUT"
+          exit 0
         elif [ "$HTTP_CODE" = "000" ]; then
           echo "::error::Flare: could not reach the Flare webhook endpoint."
           echo "queued=false" >> "$GITHUB_OUTPUT"

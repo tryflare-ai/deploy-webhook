@@ -34,4 +34,8 @@ deploy limit-token-000
 check "daily cap warns but passes" "$RC" 0
 check "daily cap queued=false" "$(output queued)" false
 
+deploy unavailable-000
+check "service unavailable warns but passes" "$RC" 0
+check "service unavailable queued=false" "$(output queued)" false
+
 finish

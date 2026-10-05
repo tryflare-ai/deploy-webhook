@@ -48,6 +48,8 @@ class Handler(BaseHTTPRequestHandler):
         route = self.path.rstrip("/").rsplit("/", 1)[-1]
         if auth == "Bearer bad-token-0000":
             status, payload = 401, {"error": "Invalid token"}
+        elif auth == "Bearer unavailable-000":
+            status, payload = 503, {"error": "Deploy quota is temporarily unavailable"}
         elif auth == "Bearer limit-token-000":
             status, payload = 429, {"error": "Daily analysis limit reached"}
         else:
